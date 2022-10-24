@@ -13,45 +13,59 @@ import { GET_TASK_API } from "../constants/TodoListConst";
 export const getTodoListApi = () => {
   //Tiền xử lý dữ liệu => xử lý function
 
-  return (dispatch) => {
-    let promise = Axios({
-      url: `http://svcy.myclass.vn/api/ToDoList/GetAllTask`,
-      method: "GET",
-    });
-
-    promise.then((result) => {
-      console.log(result.data);
-
-      dispatch({
-        type: GET_TASK_API,
-        todoList: result.data,
+  return async (dispatch) => {
+    try {
+      let response = await Axios({
+        url: `http://svcy.myclass.vn/api/ToDoList/GetAllTask`,
+        method: "GET",
       });
 
-      console.log("Thành công");
-    });
+      if (response.status === 200) {
+        dispatch({
+          type: GET_TASK_API,
+          todoList: response.data,
+        });
+      }
+    } catch (error) {
+      console.log(error.response.data);
+    }
 
-    promise.catch((err) => {
-      console.log("Thất bại");
-      console.log(err.response.data);
-    });
+    // promise.then((result) => {
+    //   console.log(result.data);
+
+    //   console.log("Thành công");
+    // });
+
+    // promise.catch((err) => {
+    //   console.log("Thất bại");
+    //   console.log(err.response.data);
+    // });
   };
 };
 
 export const addTaskApi = (taskName) => {
-  return (dispatch) => {
-    let promise = Axios({
-      url: `http://svcy.myclass.vn/api/ToDoList/AddTask`,
-      method: "POST",
-      data: { taskName: taskName },
-    });
+  return async (dispatch) => {
+    try {
+      let response = await Axios({
+        url: `http://svcy.myclass.vn/api/ToDoList/AddTask`,
+        method: "POST",
+        data: { taskName: taskName },
+      });
 
-    promise.then(() => {
-      dispatch(getTodoListApi());
-    });
+      if (response.status === 200) {
+        dispatch(getTodoListApi());
+      }
+    } catch (error) {
+      console.log(error.response.data);
+    }
 
-    promise.catch((err) => {
-      alert(err.response.data);
-    });
+    // promise.then(() => {
+    //   dispatch(getTodoListApi());
+    // });
+
+    // promise.catch((err) => {
+    //   alert(err.response.data);
+    // });
   };
 };
 
@@ -108,5 +122,3 @@ export const rejectTaskApi = (taskName) => {
     });
   };
 };
-
-
